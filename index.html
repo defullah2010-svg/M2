@@ -47,15 +47,6 @@
         flex-direction: column;
       }
 
-      iframe {
-        width: 100%;
-        height: 100%;
-        flex: 1;
-        border: 0;
-        display: block;
-        background: #ffffff;
-      }
-
       .welcome-screen {
         position: fixed;
         inset: 0;
@@ -335,8 +326,6 @@
       </section>
     </div>
 
-    <iframe id="systemFrame" title="نظام ملف الإنجاز"></iframe>
-
     <aside class="install-tip" id="installTip" role="dialog" aria-modal="false" aria-labelledby="installTitle">
       <h2 id="installTitle">طريقة تثبيت التطبيق</h2>
       <p id="installText"></p>
@@ -363,15 +352,13 @@
       const SYSTEM_URL = "https://teacherhub-e9sten9g.manus.space/";
       const welcomeScreen = document.getElementById("welcomeScreen");
       const countdown = document.getElementById("countdown");
-      const systemFrame = document.getElementById("systemFrame");
       const installTip = document.getElementById("installTip");
       const installText = document.getElementById("installText");
       const closeTipButton = document.getElementById("closeTipButton");
       const nativeInstallButton = document.getElementById("nativeInstallButton");
 
       let deferredPrompt = null;
-
-      systemFrame.src = SYSTEM_URL;
+      let redirectTimer = null;
 
       function getPlatform() {
         const ua = navigator.userAgent || "";
@@ -395,9 +382,16 @@
           nativeInstallButton.classList.add("hidden");
         }
         installTip.classList.add("show");
+        redirectTimer = setTimeout(() => {
+          window.location.replace(SYSTEM_URL);
+        }, 2500);
       }
 
-      closeTipButton.addEventListener("click", () => installTip.classList.remove("show"));
+      closeTipButton.addEventListener("click", () => {
+        installTip.classList.remove("show");
+        if (redirectTimer) clearTimeout(redirectTimer);
+        window.location.replace(SYSTEM_URL);
+      });
 
       nativeInstallButton.addEventListener("click", async () => {
         if (!deferredPrompt) return;
