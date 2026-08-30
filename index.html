@@ -166,12 +166,13 @@
         inset-inline: 16px;
         bottom: 92px;
         z-index: 35;
-        background: rgba(255, 255, 255, 0.98);
-        border: 1px solid var(--border);
-        border-radius: 20px;
-        box-shadow: 0 18px 44px rgba(17, 24, 39, 0.14);
-        padding: 16px;
+        background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(248,252,250,0.98));
+        border: 1px solid rgba(15, 107, 74, 0.12);
+        border-radius: 24px;
+        box-shadow: 0 22px 54px rgba(17, 24, 39, 0.16);
+        padding: 18px;
         display: none;
+        backdrop-filter: blur(14px);
       }
 
       .install-tip.show {
@@ -180,9 +181,12 @@
       }
 
       .install-tip h2 {
-        margin: 0 0 8px;
-        font-size: 1.05rem;
+        margin: 0 0 10px;
+        font-size: 1.12rem;
         color: #123526;
+        display: flex;
+        align-items: center;
+        gap: 8px;
       }
 
       .install-tip p {
@@ -190,6 +194,53 @@
         color: var(--muted);
         line-height: 1.8;
         font-size: 0.96rem;
+      }
+
+      .install-badge {
+        display: inline-grid;
+        place-items: center;
+        width: 34px;
+        height: 34px;
+        border-radius: 12px;
+        background: var(--primary-soft);
+        color: var(--primary);
+        font-size: 1.1rem;
+        flex: 0 0 auto;
+      }
+
+      .install-steps {
+        margin: 12px 0 0;
+        display: grid;
+        gap: 10px;
+      }
+
+      .install-step {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        background: rgba(255,255,255,0.72);
+        border: 1px solid rgba(229,231,235,0.9);
+        border-radius: 16px;
+        padding: 12px;
+      }
+
+      .install-step-icon {
+        width: 34px;
+        height: 34px;
+        border-radius: 12px;
+        display: grid;
+        place-items: center;
+        background: #f3f7f5;
+        color: var(--primary);
+        font-size: 1.05rem;
+        flex: 0 0 auto;
+      }
+
+      .install-step-text {
+        color: #374151;
+        line-height: 1.8;
+        font-size: 0.96rem;
+        font-weight: 600;
       }
 
       .install-actions {
@@ -327,8 +378,9 @@
     </div>
 
     <aside class="install-tip" id="installTip" role="dialog" aria-modal="false" aria-labelledby="installTitle">
-      <h2 id="installTitle">طريقة تثبيت التطبيق</h2>
+      <h2 id="installTitle"><span class="install-badge">⬇</span> طريقة تثبيت التطبيق</h2>
       <p id="installText"></p>
+      <div class="install-steps" id="installSteps"></div>
       <div class="install-actions">
         <button id="nativeInstallButton" type="button" class="hidden">تثبيت التطبيق</button>
         <button id="closeTipButton" type="button" class="secondary">إغلاق</button>
@@ -354,11 +406,27 @@
       const countdown = document.getElementById("countdown");
       const installTip = document.getElementById("installTip");
       const installText = document.getElementById("installText");
+      const installSteps = document.getElementById("installSteps");
       const closeTipButton = document.getElementById("closeTipButton");
       const nativeInstallButton = document.getElementById("nativeInstallButton");
 
       let deferredPrompt = null;
       let redirectTimer = null;
+
+      function isAppInstalled() {
+        return window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+      }
+
+      function openSystemPage() {
+        window.location.replace(SYSTEM_URL);
+      }
+
+      function hideInstallTipIfInstalled() {
+        if (isAppInstalled()) {
+          installTip.classList.remove("show");
+          openSystemPage();
+        }
+      }
 
       function getPlatform() {
         const ua = navigator.userAgent || "";
@@ -372,33 +440,62 @@
       function showInstallInstructions() {
         const platform = getPlatform();
         if (platform === "android") {
-          installText.textContent = "على أجهزة أندرويد: افتح الصفحة في متصفح Chrome، ثم اضغط قائمة النقاط الثلاث، واختر «إضافة إلى الشاشة الرئيسية» أو «تثبيت التطبيق». إذا ظهر زر التثبيت داخل هذه الرسالة فيمكنك استخدامه مباشرة.";
+          installText.textContent = "لتثبيت التطبيق على جهاز أندرويد، اتبع الخطوات التالية:";
+          installSteps.innerHTML = `
+            <div class="install-step">
+              <div class="install-step-icon">⋮</div>
+              <div class="install-step-text">افتح الصفحة في متصفح Chrome ثم اضغط على قائمة النقاط الثلاث في الأعلى.</div>
+            </div>
+            <div class="install-step">
+              <div class="install-step-icon">＋</div>
+              <div class="install-step-text">اختر «إضافة إلى الشاشة الرئيسية» أو «تثبيت التطبيق».</div>
+            </div>
+            <div class="install-step">
+              <div class="install-step-icon">✓</div>
+              <div class="install-step-text">إذا ظهر زر «تثبيت التطبيق» هنا، يمكنك الضغط عليه مباشرة لإكمال التثبيت بسهولة.</div>
+            </div>
+          `;
           nativeInstallButton.classList.toggle("hidden", !deferredPrompt);
         } else if (platform === "ios") {
-          installText.textContent = "على iPhone وiPad: افتح الصفحة في Safari، ثم اضغط زر المشاركة، واختر «إضافة إلى الشاشة الرئيسية». بعد ذلك ستظهر الأيقونة على الشاشة الرئيسية مثل التطبيقات.";
+          installText.textContent = "لتثبيت التطبيق على iPhone أو iPad، اتبع الخطوات التالية:";
+          installSteps.innerHTML = `
+            <div class="install-step">
+              <div class="install-step-icon">⎋</div>
+              <div class="install-step-text">افتح الصفحة في متصفح Safari ثم اضغط زر المشاركة.</div>
+            </div>
+            <div class="install-step">
+              <div class="install-step-icon">＋</div>
+              <div class="install-step-text">اختر «إضافة إلى الشاشة الرئيسية» من القائمة.</div>
+            </div>
+            <div class="install-step">
+              <div class="install-step-icon">✓</div>
+              <div class="install-step-text">بعد التثبيت ستظهر الأيقونة على الشاشة الرئيسية ويمكنك فتح التطبيق منها مباشرة.</div>
+            </div>
+          `;
           nativeInstallButton.classList.add("hidden");
         } else {
           installText.textContent = "يمكنك تثبيت التطبيق من قائمة المتصفح إذا كان خيار التثبيت متاحاً على جهازك.";
+          installSteps.innerHTML = "";
           nativeInstallButton.classList.add("hidden");
         }
         installTip.classList.add("show");
-        redirectTimer = setTimeout(() => {
-          window.location.replace(SYSTEM_URL);
-        }, 2500);
       }
 
       closeTipButton.addEventListener("click", () => {
         installTip.classList.remove("show");
         if (redirectTimer) clearTimeout(redirectTimer);
-        window.location.replace(SYSTEM_URL);
       });
 
       nativeInstallButton.addEventListener("click", async () => {
         if (!deferredPrompt) return;
         deferredPrompt.prompt();
-        await deferredPrompt.userChoice;
+        const choice = await deferredPrompt.userChoice;
         deferredPrompt = null;
         nativeInstallButton.classList.add("hidden");
+        if (choice.outcome === "accepted") {
+          installTip.classList.remove("show");
+          openSystemPage();
+        }
       });
 
       window.addEventListener("beforeinstallprompt", (event) => {
@@ -409,6 +506,11 @@
         }
       });
 
+      window.addEventListener("appinstalled", () => {
+        installTip.classList.remove("show");
+        openSystemPage();
+      });
+
       let remaining = 10;
       const timer = setInterval(() => {
         remaining -= 1;
@@ -416,9 +518,19 @@
         if (remaining <= 0) {
           clearInterval(timer);
           welcomeScreen.classList.add("hidden");
+          if (isAppInstalled()) {
+            openSystemPage();
+            return;
+          }
           showInstallInstructions();
         }
       }, 1000);
+
+      document.addEventListener("visibilitychange", () => {
+        if (!document.hidden) {
+          hideInstallTipIfInstalled();
+        }
+      });
 
       if ("serviceWorker" in navigator) {
         window.addEventListener("load", () => {
