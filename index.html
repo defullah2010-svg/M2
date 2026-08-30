@@ -1,0 +1,436 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#ffffff" />
+    <meta name="description" content="نظام ملف الإنجاز" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="نظام ملف الإنجاز" />
+    <title>نظام ملف الإنجاز</title>
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="icon" type="image/png" href="100.png" />
+    <link rel="apple-touch-icon" href="100.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        --text: #1f2937;
+        --muted: #6b7280;
+        --primary: #0f6b4a;
+        --primary-soft: #e8f5ef;
+        --gold: #d4af37;
+        --border: #e5e7eb;
+        --shadow: 0 24px 60px rgba(15, 107, 74, 0.12);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: #ffffff;
+        font-family: "Tajawal", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        color: var(--text);
+      }
+
+      body {
+        display: flex;
+        flex-direction: column;
+      }
+
+      iframe {
+        width: 100%;
+        height: 100%;
+        flex: 1;
+        border: 0;
+        display: block;
+        background: #ffffff;
+      }
+
+      .welcome-screen {
+        position: fixed;
+        inset: 0;
+        z-index: 30;
+        display: grid;
+        place-items: center;
+        padding: 24px;
+        background:
+          radial-gradient(circle at top, rgba(15, 107, 74, 0.08), transparent 32%),
+          linear-gradient(180deg, #ffffff 0%, #fbfdfc 100%);
+      }
+
+      .welcome-card {
+        width: min(100%, 560px);
+        max-height: calc(100dvh - 48px);
+        overflow: auto;
+        background: rgba(255, 255, 255, 0.96);
+        border: 1px solid rgba(229, 231, 235, 0.9);
+        border-radius: 28px;
+        box-shadow: var(--shadow);
+        padding: clamp(24px, 5vw, 40px) clamp(18px, 4vw, 28px) clamp(20px, 4vw, 28px);
+        text-align: center;
+        position: relative;
+        animation: cardIn 700ms cubic-bezier(0.23, 1, 0.32, 1) both;
+      }
+
+      .welcome-card::before {
+        content: "";
+        position: absolute;
+        inset-inline: 0;
+        top: 0;
+        height: 6px;
+        background: linear-gradient(90deg, var(--primary), var(--gold));
+      }
+
+      .logo {
+        width: clamp(76px, 18vw, 92px);
+        height: clamp(76px, 18vw, 92px);
+        margin: 0 auto 18px;
+        border-radius: clamp(22px, 5vw, 28px);
+        background: #fff;
+        overflow: hidden;
+        box-shadow: 0 14px 30px rgba(15, 107, 74, 0.22);
+      }
+
+      .logo img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: clamp(2rem, 5vw, 3.2rem);
+        line-height: 1.15;
+        font-weight: 800;
+        color: #123526;
+      }
+
+      .subtitle {
+        margin: 14px 0 0;
+        font-size: clamp(1.05rem, 2.5vw, 1.35rem);
+        font-weight: 700;
+        color: var(--primary);
+      }
+
+      .notice {
+        margin: 18px auto 0;
+        max-width: 46ch;
+        color: #374151;
+        font-size: clamp(1.02rem, 2.4vw, 1.18rem);
+        line-height: 2;
+        font-weight: 700;
+      }
+
+      .date {
+        direction: rtl;
+        unicode-bidi: plaintext;
+        font-weight: 800;
+        color: #123526;
+        white-space: nowrap;
+        display: inline-block;
+      }
+
+      .redirect {
+        margin-top: 22px;
+        font-size: 1.05rem;
+        font-weight: 700;
+        color: #123526;
+      }
+
+      .progress {
+        margin-top: 18px;
+        height: 10px;
+        background: var(--primary-soft);
+        border-radius: 999px;
+        overflow: hidden;
+      }
+
+      .progress span {
+        display: block;
+        height: 100%;
+        width: 0%;
+        background: linear-gradient(90deg, var(--primary), var(--gold));
+        animation: fillBar 10s linear forwards;
+      }
+
+      .seconds {
+        margin-top: 10px;
+        color: var(--muted);
+        font-size: 0.95rem;
+      }
+
+      .install-tip {
+        position: fixed;
+        inset-inline: 16px;
+        bottom: 92px;
+        z-index: 35;
+        background: rgba(255, 255, 255, 0.98);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        box-shadow: 0 18px 44px rgba(17, 24, 39, 0.14);
+        padding: 16px;
+        display: none;
+      }
+
+      .install-tip.show {
+        display: block;
+        animation: tipIn 260ms ease-out both;
+      }
+
+      .install-tip h2 {
+        margin: 0 0 8px;
+        font-size: 1.05rem;
+        color: #123526;
+      }
+
+      .install-tip p {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.8;
+        font-size: 0.96rem;
+      }
+
+      .install-actions {
+        margin-top: 12px;
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      button {
+        border: 0;
+        border-radius: 14px;
+        padding: 12px 18px;
+        background: var(--primary);
+        color: #fff;
+        font: inherit;
+        font-weight: 700;
+        cursor: pointer;
+        transition: transform 160ms ease;
+      }
+
+      button:active {
+        transform: scale(0.97);
+      }
+
+      button.secondary {
+        background: var(--primary-soft);
+        color: var(--primary);
+      }
+
+      .footer {
+        position: fixed;
+        inset-inline: 0;
+        bottom: 0;
+        z-index: 40;
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
+        pointer-events: none;
+        background: linear-gradient(180deg, rgba(255,255,255,0), rgba(255,255,255,0.94));
+      }
+
+      .footer a {
+        pointer-events: auto;
+        width: clamp(46px, 12vw, 52px);
+        height: clamp(46px, 12vw, 52px);
+        border-radius: clamp(14px, 4vw, 18px);
+        display: grid;
+        place-items: center;
+        text-decoration: none;
+        box-shadow: 0 14px 30px rgba(17, 24, 39, 0.14);
+        transition: transform 160ms ease;
+      }
+
+      .footer a:active {
+        transform: scale(0.97);
+      }
+
+      .footer svg {
+        width: clamp(22px, 6vw, 26px);
+        height: clamp(22px, 6vw, 26px);
+        fill: #fff;
+      }
+
+      .whatsapp {
+        background: #25d366;
+      }
+
+      .telegram {
+        background: #229ed9;
+      }
+
+      .hidden {
+        display: none !important;
+      }
+
+      @keyframes cardIn {
+        from {
+          opacity: 0;
+          transform: translateY(18px) scale(0.98);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      }
+
+      @keyframes fillBar {
+        to {
+          width: 100%;
+        }
+      }
+
+      @keyframes tipIn {
+        from {
+          opacity: 0;
+          transform: translateY(14px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @media (max-width: 640px) {
+        .welcome-screen {
+          padding: 16px;
+        }
+
+        .welcome-card {
+          border-radius: 24px;
+        }
+
+        .notice {
+          line-height: 1.9;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="welcome-screen" id="welcomeScreen">
+      <section class="welcome-card" aria-live="polite">
+        <div class="logo"><img src="100.png" alt="أيقونة نظام ملف الإنجاز" /></div>
+        <h1>نظام ملف الإنجاز</h1>
+        <p class="subtitle">الإصدار التجريبي المجاني</p>
+        <p class="notice">
+          التطبيق تحت التحديثات لمدة شهر كامل، وسيتم إطلاق التطبيق رسمياً في
+          <span class="date">01 / 10 / 2026</span>
+        </p>
+        <p class="redirect">سيتم تحويلك إلى النظام خلال ثوانٍ</p>
+        <div class="progress" aria-hidden="true"><span></span></div>
+        <div class="seconds"><span id="countdown">10</span> ثوانٍ متبقية</div>
+      </section>
+    </div>
+
+    <iframe id="systemFrame" title="نظام ملف الإنجاز"></iframe>
+
+    <aside class="install-tip" id="installTip" role="dialog" aria-modal="false" aria-labelledby="installTitle">
+      <h2 id="installTitle">طريقة تثبيت التطبيق</h2>
+      <p id="installText"></p>
+      <div class="install-actions">
+        <button id="nativeInstallButton" type="button" class="hidden">تثبيت التطبيق</button>
+        <button id="closeTipButton" type="button" class="secondary">إغلاق</button>
+      </div>
+    </aside>
+
+    <footer class="footer" aria-label="روابط التواصل">
+      <a class="whatsapp" href="https://wa.me/00966543559220" target="_blank" rel="noopener" aria-label="التواصل عبر واتساب">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12.04 2a9.9 9.9 0 0 0-8.5 15.02L2 22l5.13-1.47A9.9 9.9 0 1 0 12.04 2Zm0 1.82a8.08 8.08 0 1 1-4.13 15.04l-.3-.18-3.03.87.88-2.95-.2-.31a8.08 8.08 0 0 1 6.78-12.47Zm-3.1 3.48c-.18 0-.47.07-.72.34-.25.27-.95.93-.95 2.27 0 1.34.97 2.63 1.1 2.81.13.18 1.9 3.03 4.68 4.12 2.3.9 2.77.72 3.27.68.5-.05 1.6-.65 1.82-1.28.22-.63.22-1.17.15-1.28-.07-.11-.25-.18-.52-.31-.27-.13-1.6-.79-1.85-.88-.25-.09-.43-.13-.61.13-.18.27-.7.88-.86 1.06-.16.18-.32.2-.59.07-.27-.13-1.14-.42-2.17-1.34-.8-.71-1.34-1.59-1.5-1.86-.16-.27-.02-.42.12-.55.12-.12.27-.32.4-.48.13-.16.18-.27.27-.45.09-.18.05-.34-.02-.48-.07-.13-.6-1.45-.84-1.98-.22-.52-.45-.45-.61-.46-.16-.01-.34-.01-.52-.01Z"/>
+        </svg>
+      </a>
+      <a class="telegram" href="https://t.me/defullah10" target="_blank" rel="noopener" aria-label="قناة تليجرام">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M21.94 4.6 18.9 19.1c-.23 1.02-.83 1.27-1.68.79l-4.65-3.43-2.24 2.16c-.25.25-.46.46-.94.46l.34-4.74 8.62-7.79c.38-.34-.08-.53-.58-.19L7.1 13.3 2.52 11.87c-1-.31-1.02-1 .21-1.48l17.9-6.9c.83-.3 1.56.2 1.31 1.11Z"/>
+        </svg>
+      </a>
+    </footer>
+
+    <script>
+      const SYSTEM_URL = "https://teacherhub-e9sten9g.manus.space/";
+      const welcomeScreen = document.getElementById("welcomeScreen");
+      const countdown = document.getElementById("countdown");
+      const systemFrame = document.getElementById("systemFrame");
+      const installTip = document.getElementById("installTip");
+      const installText = document.getElementById("installText");
+      const closeTipButton = document.getElementById("closeTipButton");
+      const nativeInstallButton = document.getElementById("nativeInstallButton");
+
+      let deferredPrompt = null;
+
+      systemFrame.src = SYSTEM_URL;
+
+      function getPlatform() {
+        const ua = navigator.userAgent || "";
+        const isAndroid = /Android/i.test(ua);
+        const isIOS = /iPhone|iPad|iPod/i.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+        if (isAndroid) return "android";
+        if (isIOS) return "ios";
+        return "other";
+      }
+
+      function showInstallInstructions() {
+        const platform = getPlatform();
+        if (platform === "android") {
+          installText.textContent = "على أجهزة أندرويد: افتح الصفحة في متصفح Chrome، ثم اضغط قائمة النقاط الثلاث، واختر «إضافة إلى الشاشة الرئيسية» أو «تثبيت التطبيق». إذا ظهر زر التثبيت داخل هذه الرسالة فيمكنك استخدامه مباشرة.";
+          nativeInstallButton.classList.toggle("hidden", !deferredPrompt);
+        } else if (platform === "ios") {
+          installText.textContent = "على iPhone وiPad: افتح الصفحة في Safari، ثم اضغط زر المشاركة، واختر «إضافة إلى الشاشة الرئيسية». بعد ذلك ستظهر الأيقونة على الشاشة الرئيسية مثل التطبيقات.";
+          nativeInstallButton.classList.add("hidden");
+        } else {
+          installText.textContent = "يمكنك تثبيت التطبيق من قائمة المتصفح إذا كان خيار التثبيت متاحاً على جهازك.";
+          nativeInstallButton.classList.add("hidden");
+        }
+        installTip.classList.add("show");
+      }
+
+      closeTipButton.addEventListener("click", () => installTip.classList.remove("show"));
+
+      nativeInstallButton.addEventListener("click", async () => {
+        if (!deferredPrompt) return;
+        deferredPrompt.prompt();
+        await deferredPrompt.userChoice;
+        deferredPrompt = null;
+        nativeInstallButton.classList.add("hidden");
+      });
+
+      window.addEventListener("beforeinstallprompt", (event) => {
+        event.preventDefault();
+        deferredPrompt = event;
+        if (getPlatform() === "android" && installTip.classList.contains("show")) {
+          nativeInstallButton.classList.remove("hidden");
+        }
+      });
+
+      let remaining = 10;
+      const timer = setInterval(() => {
+        remaining -= 1;
+        countdown.textContent = String(Math.max(remaining, 0));
+        if (remaining <= 0) {
+          clearInterval(timer);
+          welcomeScreen.classList.add("hidden");
+          showInstallInstructions();
+        }
+      }, 1000);
+
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+          navigator.serviceWorker.register("sw.js").catch(() => {});
+        });
+      }
+    </script>
+  </body>
+</html>
