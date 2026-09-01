@@ -1,0 +1,27 @@
+{
+  "name": "ملف الإنجاز",
+  "short_name": "ملف الإنجاز",
+  "description": "ملف الإنجاز  ",
+  "lang": "ar",
+  "dir": "rtl",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#ffffff",
+  "theme_color": "#0f6b4a",
+  "icons": [
+    {
+      "src": "200.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "200.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
