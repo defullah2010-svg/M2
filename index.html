@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <meta name="theme-color" content="#0f6b4a" />
+    <meta name="theme-color" content="#005b8e" />
     <meta name="description" content="نظام ملف الإنجاز" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -20,11 +20,14 @@
       :root {
         --text: #1f2937;
         --muted: #6b7280;
-        --primary: #0f6b4a;
-        --primary-soft: #e8f5ef;
-        --gold: #d4af37;
+        --primary: #075f58;
+        --primary-soft: #e5f2f0;
+        --royal-blue: #00396d;
+        --royal-green: #00855d;
+        --gold: #d8b65a;
+        --gold-light: #ffe8a3;
         --border: #e5e7eb;
-        --shadow: 0 24px 60px rgba(15, 107, 74, 0.12);
+        --shadow: 0 28px 72px rgba(0, 25, 50, 0.46);
       }
 
       * {
@@ -55,41 +58,88 @@
         place-items: center;
         padding: 24px;
         background:
-          radial-gradient(circle at top, rgba(15, 107, 74, 0.08), transparent 32%),
-          linear-gradient(180deg, #ffffff 0%, #fbfdfc 100%);
+          radial-gradient(circle at 50% -10%, rgba(243, 209, 111, 0.2), transparent 31%),
+          radial-gradient(circle at 10% 88%, rgba(0, 202, 137, 0.38), transparent 36%),
+          radial-gradient(circle at 92% 82%, rgba(34, 129, 224, 0.38), transparent 33%),
+          linear-gradient(135deg, #00396d 0%, #005b8e 44%, #00855d 100%);
+        overflow: hidden;
+      }
+
+      .welcome-screen::before,
+      .welcome-screen::after {
+        content: "";
+        position: absolute;
+        border: 1px solid rgba(255, 232, 163, 0.2);
+        border-radius: 50%;
+        pointer-events: none;
+      }
+
+      .welcome-screen::before {
+        width: min(84vw, 850px);
+        aspect-ratio: 1;
+        top: -48%;
+        right: -22%;
+        box-shadow: 0 0 0 22px rgba(255, 232, 163, 0.025), 0 0 0 68px rgba(255, 232, 163, 0.018);
+      }
+
+      .welcome-screen::after {
+        width: min(58vw, 590px);
+        aspect-ratio: 1;
+        bottom: -34%;
+        left: -16%;
+        border-color: rgba(93, 205, 213, 0.22);
+        box-shadow: 0 0 0 26px rgba(93, 205, 213, 0.025);
       }
 
       .welcome-card {
         width: min(100%, 560px);
         max-height: calc(100dvh - 48px);
         overflow: auto;
-        background: rgba(255, 255, 255, 0.96);
-        border: 1px solid rgba(229, 231, 235, 0.9);
-        border-radius: 28px;
+        background: linear-gradient(135deg, rgba(0, 59, 107, 0.96) 0%, rgba(0, 112, 104, 0.95) 58%, rgba(0, 136, 87, 0.96) 100%);
+        border: 1px solid rgba(255, 232, 163, 0.58);
+        border-radius: 30px;
         box-shadow: var(--shadow);
         padding: clamp(24px, 5vw, 40px) clamp(18px, 4vw, 28px) clamp(20px, 4vw, 28px);
         text-align: center;
         position: relative;
+        isolation: isolate;
+        backdrop-filter: blur(14px);
         animation: cardIn 700ms cubic-bezier(0.23, 1, 0.32, 1) both;
       }
 
       .welcome-card::before {
         content: "";
         position: absolute;
-        inset-inline: 0;
+        inset: 8px;
+        border: 1px solid rgba(255, 232, 163, 0.16);
+        border-radius: 23px;
+        pointer-events: none;
+        z-index: -1;
+      }
+
+      .welcome-card::after {
+        content: "";
+        position: absolute;
+        inset-inline: 20%;
         top: 0;
-        height: 6px;
-        background: linear-gradient(90deg, var(--primary), var(--gold));
+        height: 3px;
+        border-radius: 0 0 999px 999px;
+        background: linear-gradient(90deg, transparent, var(--gold-light), var(--gold), var(--gold-light), transparent);
+        box-shadow: 0 2px 12px rgba(255, 232, 163, 0.55);
       }
 
       .logo {
-        width: clamp(76px, 18vw, 92px);
-        height: clamp(76px, 18vw, 92px);
-        margin: 0 auto 18px;
-        border-radius: clamp(22px, 5vw, 28px);
-        background: #fff;
+        width: clamp(86px, 20vw, 104px);
+        height: clamp(86px, 20vw, 104px);
+        margin: 4px auto 20px;
+        padding: 5px;
+        border: 2px solid var(--gold-light);
+        outline: 1px solid rgba(216, 182, 90, 0.95);
+        outline-offset: 4px;
+        border-radius: clamp(25px, 6vw, 32px);
+        background: linear-gradient(135deg, #fff3bf, #b88722 48%, #fff0b0);
         overflow: hidden;
-        box-shadow: 0 14px 30px rgba(15, 107, 74, 0.22);
+        box-shadow: 0 0 0 8px rgba(216, 182, 90, 0.1), 0 18px 38px rgba(0, 19, 12, 0.5), inset 0 0 14px rgba(92, 58, 0, 0.24);
       }
 
       .logo img {
@@ -97,6 +147,8 @@
         height: 100%;
         object-fit: cover;
         display: block;
+        border-radius: calc(clamp(25px, 6vw, 32px) - 8px);
+        border: 1px solid rgba(255, 255, 255, 0.6);
       }
 
       h1 {
@@ -104,7 +156,9 @@
         font-size: clamp(2rem, 5vw, 3.2rem);
         line-height: 1.15;
         font-weight: 800;
-        color: #123526;
+        color: #fffdf3;
+        letter-spacing: -0.03em;
+        text-shadow: 0 2px 16px rgba(0, 0, 0, 0.3);
       }
 
       .subtitle {
@@ -117,10 +171,16 @@
       .notice {
         margin: 18px auto 0;
         max-width: 46ch;
-        color: #374151;
+        color: rgba(255, 253, 243, 0.9);
         font-size: clamp(1.02rem, 2.4vw, 1.18rem);
         line-height: 2;
         font-weight: 700;
+      }
+
+      .full-subscription {
+        display: block;
+        color: var(--gold-light);
+        font-weight: 800;
       }
 
       .date {
@@ -136,28 +196,31 @@
         margin-top: 22px;
         font-size: 1.05rem;
         font-weight: 700;
-        color: #123526;
+        color: rgba(255, 253, 243, 0.92);
       }
 
       .progress {
         margin-top: 18px;
         height: 10px;
-        background: var(--primary-soft);
+        border: 1px solid rgba(255, 232, 163, 0.3);
+        background: rgba(1, 33, 48, 0.58);
         border-radius: 999px;
         overflow: hidden;
+        box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.22);
       }
 
       .progress span {
         display: block;
         height: 100%;
         width: 0%;
-        background: linear-gradient(90deg, var(--primary), var(--gold));
+        background: linear-gradient(90deg, #b98520, var(--gold-light), #e0bc61);
+        box-shadow: 0 0 14px rgba(255, 232, 163, 0.72);
         animation: fillBar 10s linear forwards;
       }
 
       .seconds {
         margin-top: 10px;
-        color: var(--muted);
+        color: rgba(255, 253, 243, 0.7);
         font-size: 0.95rem;
       }
 
@@ -324,10 +387,9 @@
       <section class="welcome-card" aria-live="polite">
         <div class="logo"><img src="200.png" alt="أيقونة نظام ملف الإنجاز" /></div>
         <h1>نظام ملف الإنجاز</h1>
-        <p class="subtitle">الإصدار التجريبي المجاني</p>
         <p class="notice">
-        لمشتركات نظام التقارير الذكي بالكامل
-        
+          التطبيق مجاني لمشتركات نظام التقارير الذكي
+          <span class="full-subscription">الاشتراك الكامل</span>
         </p>
         <p class="redirect">سيتم تحويلك إلى النظام خلال ثوانٍ</p>
         <div class="progress" aria-hidden="true"><span></span></div>
