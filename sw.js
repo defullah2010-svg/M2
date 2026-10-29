@@ -1,6 +1,6 @@
 const CACHE_NAME = "reports-pwa-v2";
 const APP_SHELL = [
-  "./1.html",
+  "./index.html",
   "./manifest.json",
   "./icon-192.png",
   "./icon-512.png",
