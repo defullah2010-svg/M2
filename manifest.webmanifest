@@ -1,0 +1,23 @@
+{
+  "id": "./",
+  "name": "نظام ملف الإنجاز للمشتركات",
+  "short_name": "ملف المشتركات",
+  "description": "بوابة نظام ملف الإنجاز للمشتركات القابلة للتثبيت.",
+  "lang": "ar",
+  "dir": "rtl",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone"],
+  "orientation": "any",
+  "background_color": "#005b8e",
+  "theme_color": "#005b8e",
+  "icons": [
+    {
+      "src": "200.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
