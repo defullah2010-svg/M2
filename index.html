@@ -1,550 +1,714 @@
 <!doctype html>
-<html lang="ar" dir="rtl">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <meta name="theme-color" content="#005b8e" />
-    <meta name="description" content="نظام ملف الإنجاز" />
-    <meta name="mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-    <meta name="apple-mobile-web-app-title" content="نظام التقارير" />
-    <title>نظام ملف الإنجاز</title>
-    <link rel="manifest" href="manifest.json" />
-    <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png" />
-    <link rel="apple-touch-icon" sizes="180x180" href="icon-192.png" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet" />
-    <style>
-      :root {
-        --text: #1f2937;
-        --muted: #6b7280;
-        --primary: #075f58;
-        --primary-soft: #e5f2f0;
-        --royal-blue: #00396d;
-        --royal-green: #00855d;
-        --gold: #d8b65a;
-        --gold-light: #ffe8a3;
-        --border: #e5e7eb;
-        --shadow: 0 28px 72px rgba(0, 25, 50, 0.46);
+<html lang="ar">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#052b45" />
+  <meta name="description" content="تنويه هام: ملف الإنجاز الإلكتروني أصبح داخل نظام التقارير." />
+  <title>تنويه هام | نظام التقارير</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --ink: #f5fffd;
+      --muted: #b9d6db;
+      --mint: #76f6bd;
+      --mint-strong: #20dd91;
+      --cyan: #4dd9ff;
+      --blue: #0d6dbe;
+      --night: #04253f;
+      --deep: #021827;
+      --glass: rgba(6, 45, 65, .56);
+      --line: rgba(154, 255, 219, .28);
+      --shadow: 0 28px 80px rgba(0, 6, 22, .44);
+      --pointer-x: 50%;
+      --pointer-y: 20%;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { width: 100%; overflow-x: hidden; background: var(--deep); }
+
+    body {
+      width: 100%;
+      min-width: 320px;
+      overflow-x: hidden;
+      direction: rtl;
+      min-height: 100vh;
+      margin: 0;
+      color: var(--ink);
+      font-family: "Tajawal", "Segoe UI", Tahoma, Arial, sans-serif;
+      background: var(--deep);
+    }
+
+    button { font: inherit; }
+
+    .page-shell {
+      position: relative;
+      isolation: isolate;
+      display: grid;
+      width: 100%;
+      min-height: 100vh;
+      overflow: hidden;
+      padding: clamp(18px, 3vw, 42px);
+      place-items: center;
+      background:
+        radial-gradient(circle at var(--pointer-x) var(--pointer-y), rgba(47, 218, 166, .16), transparent 29%),
+        radial-gradient(circle at 91% 13%, rgba(39, 130, 231, .30), transparent 25%),
+        radial-gradient(circle at 9% 83%, rgba(2, 178, 121, .28), transparent 28%),
+        linear-gradient(135deg, #063f4c 0%, #063151 42%, #061e42 100%);
+    }
+
+    .page-shell::before,
+    .page-shell::after {
+      display: none;
+      position: absolute;
+      z-index: -3;
+      width: 62vw;
+      height: 62vw;
+      max-width: 880px;
+      max-height: 880px;
+      content: "";
+      border-radius: 50%;
+      filter: blur(1px);
+      opacity: .88;
+      pointer-events: none;
+    }
+
+    .page-shell::before {
+      right: -28vw;
+      bottom: -35vw;
+      border: 1px solid rgba(84, 236, 255, .31);
+      box-shadow: 0 0 0 70px rgba(63, 216, 255, .025), 0 0 0 140px rgba(63, 216, 255, .022);
+      animation: breathe 9s ease-in-out infinite;
+    }
+
+    .page-shell::after {
+      top: -38vw;
+      left: -30vw;
+      border: 1px solid rgba(115, 255, 185, .34);
+      box-shadow: 0 0 0 80px rgba(82, 255, 169, .026), 0 0 0 160px rgba(82, 255, 169, .02);
+      animation: breathe 11s ease-in-out -3s infinite reverse;
+    }
+
+    .grid {
+      position: absolute;
+      z-index: -2;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(116, 231, 251, .06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(116, 231, 251, .06) 1px, transparent 1px);
+      background-size: 52px 52px;
+      mask-image: linear-gradient(to bottom, rgba(0,0,0,.7), transparent 72%);
+      pointer-events: none;
+    }
+
+    .wave {
+      position: absolute;
+      z-index: -1;
+      right: 0;
+      left: 0;
+      width: 100%;
+      height: 300px;
+      opacity: .75;
+      pointer-events: none;
+    }
+
+    .wave--one {
+      bottom: -146px;
+      border: 1px solid rgba(66, 249, 178, .62);
+      border-radius: 46% 54% 0 0 / 34% 42% 0 0;
+      box-shadow: 0 -12px 48px rgba(0, 243, 162, .18), inset 0 32px 70px rgba(0, 218, 157, .11);
+      animation: wave-glow 9s ease-in-out infinite;
+    }
+
+    .wave--two {
+      bottom: -184px;
+      border: 1px solid rgba(82, 191, 255, .53);
+      border-radius: 58% 42% 0 0 / 42% 30% 0 0;
+      box-shadow: 0 -12px 45px rgba(45, 153, 255, .17), inset 0 32px 75px rgba(33, 132, 235, .12);
+      animation: wave-glow 11s ease-in-out -3s infinite;
+    }
+
+    .spark {
+      position: absolute;
+      z-index: -1;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--mint);
+      box-shadow: 0 0 11px 3px rgba(97, 255, 186, .85);
+      animation: twinkle 4.6s ease-in-out infinite;
+    }
+
+    .spark:nth-of-type(1) { top: 13%; right: 14%; animation-delay: -1s; }
+    .spark:nth-of-type(2) { top: 23%; left: 14%; width: 3px; height: 3px; animation-delay: -2.6s; }
+    .spark:nth-of-type(3) { top: 68%; right: 9%; width: 4px; height: 4px; animation-delay: -3.4s; }
+    .spark:nth-of-type(4) { top: 78%; left: 9%; animation-delay: -.4s; }
+    .spark:nth-of-type(5) { top: 42%; left: 4%; width: 3px; height: 3px; animation-delay: -2s; }
+    .spark:nth-of-type(6) { top: 48%; right: 4%; width: 3px; height: 3px; animation-delay: -4s; }
+
+    .notice {
+      width: min(100%, 1050px);
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity .65s ease, transform .65s cubic-bezier(.2,.9,.3,1);
+    }
+
+    .loaded .notice { opacity: 1; transform: translateY(0); }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: clamp(16px, 3vw, 28px);
+      color: #d7fcfa;
+      font-size: .94rem;
+      font-weight: 700;
+      letter-spacing: .02em;
+    }
+
+    .brand-mark {
+      position: relative;
+      display: grid;
+      width: 46px;
+      height: 46px;
+      place-items: center;
+      overflow: hidden;
+      color: white;
+      font-family: Arial, sans-serif;
+      font-size: 1.35rem;
+      font-weight: 900;
+      direction: ltr;
+      border: 1px solid rgba(146, 255, 226, .76);
+      border-radius: 15px;
+      background: linear-gradient(145deg, rgba(49, 232, 164, .90), rgba(7, 103, 172, .88));
+      box-shadow: 0 0 28px rgba(71, 253, 190, .36), inset 0 1px 0 rgba(255,255,255,.45);
+    }
+
+    .brand-mark::after {
+      position: absolute;
+      top: -9px;
+      right: -12px;
+      width: 26px;
+      height: 26px;
+      content: "";
+      border-radius: 50%;
+      background: rgba(255,255,255,.35);
+      filter: blur(2px);
+    }
+
+    .topbar__name { opacity: .92; }
+
+    .announcement-card {
+      position: relative;
+      overflow: hidden;
+      padding: clamp(25px, 5.4vw, 58px) clamp(20px, 8vw, 86px) clamp(24px, 5vw, 50px);
+      text-align: center;
+      border: 1px solid var(--line);
+      border-radius: clamp(26px, 4vw, 44px);
+      background: linear-gradient(145deg, rgba(6, 59, 78, .74), rgba(4, 38, 70, .68));
+      box-shadow: var(--shadow), inset 0 1px 0 rgba(255,255,255,.12);
+      backdrop-filter: blur(16px);
+    }
+
+    .announcement-card::before {
+      position: absolute;
+      top: -130px;
+      left: 50%;
+      width: 400px;
+      height: 260px;
+      content: "";
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(117, 255, 192, .21), transparent 67%);
+      transform: translateX(-50%);
+      pointer-events: none;
+    }
+
+    .announcement-card::after {
+      position: absolute;
+      right: 20px;
+      bottom: 18px;
+      width: 68px;
+      height: 68px;
+      content: "";
+      border-right: 1px solid rgba(97, 250, 218, .35);
+      border-bottom: 1px solid rgba(97, 250, 218, .35);
+      border-radius: 0 0 17px 0;
+      opacity: .6;
+    }
+
+    .eyebrow {
+      position: relative;
+      z-index: 1;
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      padding: 8px 17px 7px;
+      margin: 0 0 19px;
+      color: #effffb;
+      font-size: clamp(.82rem, 1.8vw, .98rem);
+      font-weight: 800;
+      border: 1px solid rgba(137, 255, 210, .62);
+      border-radius: 999px;
+      background: rgba(10, 98, 84, .30);
+      box-shadow: 0 0 0 0 rgba(88, 255, 183, .48);
+      animation: pulse-ring 3.2s ease-out infinite;
+    }
+
+    .eyebrow__dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #92ffd0;
+      box-shadow: 0 0 13px 3px rgba(113, 255, 194, .94);
+    }
+
+    h1 {
+      max-width: 760px;
+      margin: 0 auto;
+      color: #fff;
+      font-size: clamp(2rem, 5.4vw, 4.65rem);
+      font-weight: 900;
+      line-height: 1.18;
+      letter-spacing: -.045em;
+      text-wrap: balance;
+    }
+
+    h1 span {
+      display: block;
+      margin-top: .08em;
+      background: linear-gradient(100deg, #c6ffe5 0%, #8bffc6 43%, #64e6ff 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      filter: drop-shadow(0 9px 18px rgba(0, 253, 165, .14));
+    }
+
+    .lead {
+      max-width: 630px;
+      margin: 19px auto 0;
+      color: var(--muted);
+      font-size: clamp(1rem, 2.25vw, 1.22rem);
+      font-weight: 500;
+      line-height: 1.8;
+    }
+
+    .cancellation {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: clamp(12px, 2vw, 17px);
+      max-width: 790px;
+      padding: 17px clamp(16px, 3vw, 28px);
+      margin: clamp(22px, 4vw, 34px) auto 0;
+      text-align: right;
+      border: 1px solid rgba(132, 203, 255, .28);
+      border-radius: 21px;
+      background: rgba(5, 39, 74, .49);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.07);
+      transition: transform .35s ease, border-color .35s ease, background .35s ease;
+    }
+
+    .cancellation:hover {
+      border-color: rgba(148, 253, 224, .55);
+      background: rgba(4, 57, 79, .61);
+      transform: translateY(-3px);
+    }
+
+    .cancellation__icon {
+      display: grid;
+      flex: 0 0 auto;
+      width: 49px;
+      height: 49px;
+      place-items: center;
+      color: #c3edff;
+      border: 1px solid rgba(163, 224, 255, .54);
+      border-radius: 14px;
+      background: linear-gradient(145deg, rgba(83, 180, 255, .22), rgba(21, 99, 152, .17));
+    }
+
+    .cancellation__text {
+      color: #effcff;
+      font-size: clamp(.95rem, 2.1vw, 1.16rem);
+      font-weight: 700;
+      line-height: 1.62;
+    }
+
+    .cta-wrap {
+      position: relative;
+      z-index: 1;
+      margin-top: clamp(18px, 3.5vw, 29px);
+    }
+
+    .cta {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      width: min(100%, 790px);
+      min-height: 73px;
+      padding: 13px 22px;
+      cursor: pointer;
+      color: #fff;
+      font-size: clamp(.96rem, 2.25vw, 1.17rem);
+      font-weight: 800;
+      line-height: 1.55;
+      text-align: right;
+      border: 1px solid rgba(127, 255, 209, .78);
+      border-radius: 21px;
+      outline: none;
+      background: linear-gradient(105deg, rgba(11, 133, 89, .86), rgba(3, 93, 133, .92));
+      box-shadow: 0 14px 35px rgba(0, 0, 23, .25), 0 0 26px rgba(43, 255, 174, .16), inset 0 1px 0 rgba(255,255,255,.25);
+      transition: transform .28s ease, box-shadow .28s ease, filter .28s ease;
+    }
+
+    .cta:hover,
+    .cta:focus-visible {
+      filter: saturate(1.18) brightness(1.08);
+      box-shadow: 0 17px 43px rgba(0, 0, 25, .33), 0 0 36px rgba(43, 255, 174, .30), inset 0 1px 0 rgba(255,255,255,.31);
+      transform: translateY(-3px);
+    }
+
+    .cta:active { transform: translateY(0) scale(.99); }
+
+    .cta__arrow {
+      display: grid;
+      flex: 0 0 auto;
+      width: 42px;
+      height: 42px;
+      place-items: center;
+      border: 1px solid rgba(255,255,255,.75);
+      border-radius: 50%;
+      background: rgba(255,255,255,.08);
+      transition: transform .28s ease;
+    }
+
+    .cta:hover .cta__arrow { transform: translateX(-5px); }
+
+    .hint {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      margin: 18px 0 0;
+      color: rgba(220, 255, 247, .74);
+      font-size: clamp(.76rem, 1.7vw, .9rem);
+      font-weight: 500;
+    }
+
+    .hint svg { color: #7bfac0; }
+
+    .journey {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: clamp(22px, 4vw, 33px);
+      color: #d0f8ec;
+      font-size: clamp(.78rem, 1.75vw, .94rem);
+      font-weight: 700;
+    }
+
+    .journey__step {
+      padding: 7px 12px 6px;
+      border: 1px solid rgba(146, 231, 232, .24);
+      border-radius: 999px;
+      background: rgba(9, 83, 100, .24);
+    }
+
+    .journey__arrow { color: #79edc0; }
+
+    .footer-note {
+      position: relative;
+      z-index: 1;
+      margin: clamp(18px, 3.5vw, 30px) 0 0;
+      color: rgba(193, 223, 229, .65);
+      font-size: .78rem;
+      font-weight: 500;
+    }
+
+    .focus-mode .cancellation {
+      border-color: rgba(149, 255, 213, .82);
+      box-shadow: 0 0 0 5px rgba(94, 255, 188, .10), inset 0 1px 0 rgba(255,255,255,.14);
+      animation: nudge .55s ease both;
+    }
+
+    .focus-mode .cta { animation: halo .8s ease both; }
+
+    @keyframes breathe {
+      50% { opacity: .55; transform: scale(1.06); }
+    }
+
+    @keyframes wave-glow {
+      0%, 100% { opacity: .62; filter: brightness(.92); }
+      50% { opacity: .9; filter: brightness(1.16); }
+    }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: .25; transform: scale(.7); }
+      50% { opacity: 1; transform: scale(1.25); }
+    }
+
+    @keyframes pulse-ring {
+      0%, 70%, 100% { box-shadow: 0 0 0 0 rgba(88, 255, 183, 0); }
+      45% { box-shadow: 0 0 0 9px rgba(88, 255, 183, .08); }
+    }
+
+    @keyframes nudge {
+      30% { transform: translateY(-5px); }
+      60% { transform: translateY(2px); }
+      100% { transform: translateY(0); }
+    }
+
+    @keyframes halo {
+      50% { box-shadow: 0 15px 44px rgba(0, 0, 25, .34), 0 0 53px rgba(89, 255, 197, .44), inset 0 1px 0 rgba(255,255,255,.30); }
+    }
+
+    @media (max-width: 560px) {
+      .page-shell { padding: 16px; }
+      .topbar { margin-bottom: 14px; }
+      .brand-mark { width: 42px; height: 42px; border-radius: 13px; }
+      .announcement-card { padding: 28px 16px 26px; }
+      .cancellation { align-items: flex-start; padding: 14px; border-radius: 18px; }
+      .cancellation__icon { width: 43px; height: 43px; border-radius: 12px; }
+      .cta { min-height: 82px; padding: 13px 14px; border-radius: 18px; }
+      .cta__arrow { width: 38px; height: 38px; }
+      .journey { gap: 7px; }
+      .journey__step { padding: 6px 9px 5px; }
+    }
+
+    /* تخطيط مضغوط: يحافظ على وضوح الرسالة كاملة داخل نافذة واحدة. */
+    body {
+      height: 100dvh;
+      min-height: 100svh;
+      overflow: hidden;
+    }
+
+    .page-shell {
+      height: 100dvh;
+      min-height: 100svh;
+      padding: clamp(8px, 2vh, 22px) clamp(12px, 3vw, 42px);
+    }
+
+    .notice { width: min(100%, 1000px); }
+
+    .topbar {
+      gap: 9px;
+      margin-bottom: clamp(7px, 1.8vh, 14px);
+      font-size: clamp(.76rem, 1.35vw, .9rem);
+    }
+
+    .brand-mark { width: 40px; height: 40px; font-size: 1.15rem; }
+
+    .announcement-card {
+      padding: clamp(17px, 3.8vh, 32px) clamp(16px, 6vw, 64px) clamp(15px, 3.2vh, 27px);
+      border-radius: clamp(22px, 3.6vw, 36px);
+    }
+
+    .eyebrow {
+      gap: 7px;
+      padding: 5px 13px 4px;
+      margin-bottom: clamp(8px, 1.6vh, 13px);
+      font-size: clamp(.72rem, 1.4vw, .9rem);
+    }
+
+    .eyebrow__dot { width: 7px; height: 7px; }
+
+    h1 {
+      max-width: 850px;
+      font-size: clamp(1.75rem, 4.15vw, 3.7rem);
+      line-height: 1.12;
+      white-space: nowrap;
+    }
+
+    h1 span { margin-top: .04em; }
+
+    .lead {
+      margin-top: clamp(8px, 1.5vh, 12px);
+      font-size: clamp(.78rem, 1.55vw, 1.05rem);
+      line-height: 1.45;
+      white-space: nowrap;
+    }
+
+    .cancellation {
+      gap: clamp(8px, 1.4vw, 13px);
+      padding: clamp(10px, 1.8vh, 14px) clamp(12px, 2.4vw, 22px);
+      margin-top: clamp(11px, 2.3vh, 18px);
+      border-radius: 18px;
+    }
+
+    .cancellation__icon { width: 42px; height: 42px; border-radius: 12px; }
+    .cancellation__text { font-size: clamp(.78rem, 1.45vw, 1rem); line-height: 1.38; }
+    .cta-wrap { margin-top: clamp(11px, 2.2vh, 18px); }
+
+    .cta {
+      gap: 10px;
+      min-height: clamp(54px, 7.5vh, 64px);
+      padding: 9px 17px;
+      font-size: clamp(.78rem, 1.45vw, 1rem);
+      line-height: 1.35;
+      border-radius: 18px;
+    }
+
+    .cta__arrow { width: 36px; height: 36px; }
+
+    .hint {
+      gap: 7px;
+      margin-top: clamp(7px, 1.4vh, 11px);
+      font-size: clamp(.65rem, 1.25vw, .82rem);
+    }
+
+    .journey {
+      flex-wrap: nowrap;
+      gap: 7px;
+      margin-top: clamp(10px, 2vh, 16px);
+      font-size: clamp(.64rem, 1.2vw, .8rem);
+    }
+
+    .journey__step { padding: 5px 9px 4px; white-space: nowrap; }
+    .footer-note { margin-top: clamp(8px, 1.5vh, 12px); font-size: clamp(.62rem, 1vw, .74rem); }
+
+    @media (max-width: 560px) {
+      .page-shell { padding: 8px; }
+      .notice { width: min(100%, 410px); }
+      .topbar { gap: 7px; margin-bottom: 7px; font-size: .72rem; }
+      .brand-mark { width: 36px; height: 36px; border-radius: 11px; font-size: 1rem; }
+      .announcement-card { padding: 17px 11px 15px; border-radius: 22px; }
+      .eyebrow { padding: 4px 11px 3px; margin-bottom: 8px; font-size: .68rem; }
+      h1 { font-size: clamp(1.12rem, 6vw, 1.42rem); letter-spacing: -.035em; }
+      .lead { margin-top: 7px; font-size: clamp(.66rem, 3.1vw, .8rem); }
+      .cancellation { gap: 7px; padding: 8px; margin-top: 10px; border-radius: 15px; }
+      .cancellation__icon { width: 34px; height: 34px; border-radius: 10px; }
+      .cancellation__icon svg { width: 21px; height: 21px; }
+      .cancellation__text { font-size: clamp(.68rem, 2.8vw, .78rem); }
+      .cta-wrap { margin-top: 10px; }
+      .cta { min-height: 55px; gap: 7px; padding: 8px 10px; border-radius: 15px; font-size: clamp(.69rem, 2.8vw, .8rem); }
+      .cta__arrow { width: 32px; height: 32px; }
+      .cta__arrow svg { width: 18px; height: 18px; }
+      .hint { gap: 5px; margin-top: 7px; font-size: .61rem; white-space: nowrap; }
+      .journey { gap: 4px; margin-top: 10px; font-size: .56rem; }
+      .journey__step { padding: 4px 6px 3px; }
+      .footer-note { margin-top: 8px; font-size: .58rem; }
+    }
+
+    @media (max-height: 700px) and (min-width: 561px) {
+      .page-shell { padding-block: 8px; }
+      .topbar { margin-bottom: 6px; }
+      .brand-mark { width: 35px; height: 35px; font-size: 1rem; }
+      .announcement-card { padding-block: 15px; }
+      h1 { font-size: clamp(1.55rem, 3.7vw, 3rem); }
+      .cancellation { margin-top: 9px; padding-block: 8px; }
+      .cancellation__icon { width: 36px; height: 36px; }
+      .cta-wrap { margin-top: 9px; }
+      .cta { min-height: 50px; padding-block: 7px; }
+      .hint { margin-top: 6px; }
+      .journey { margin-top: 8px; }
+      .footer-note { margin-top: 7px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
       }
+    }
+  </style>
+</head>
+<body>
+  <main class="page-shell" id="page">
+    <div class="grid" aria-hidden="true"></div>
+    <div class="wave wave--one" aria-hidden="true"></div>
+    <div class="wave wave--two" aria-hidden="true"></div>
+    <span class="spark" aria-hidden="true"></span>
+    <span class="spark" aria-hidden="true"></span>
+    <span class="spark" aria-hidden="true"></span>
+    <span class="spark" aria-hidden="true"></span>
+    <span class="spark" aria-hidden="true"></span>
+    <span class="spark" aria-hidden="true"></span>
 
-      * {
-        box-sizing: border-box;
-      }
-
-      html,
-      body {
-        margin: 0;
-        width: 100%;
-        height: 100%;
-        overflow: hidden;
-        background: #ffffff;
-        font-family: "Tajawal", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        color: var(--text);
-      }
-
-      body {
-        display: flex;
-        flex-direction: column;
-      }
-
-      .welcome-screen {
-        position: fixed;
-        inset: 0;
-        z-index: 30;
-        display: grid;
-        place-items: center;
-        padding: 24px;
-        background:
-          radial-gradient(circle at 50% -10%, rgba(243, 209, 111, 0.2), transparent 31%),
-          radial-gradient(circle at 10% 88%, rgba(0, 202, 137, 0.38), transparent 36%),
-          radial-gradient(circle at 92% 82%, rgba(34, 129, 224, 0.38), transparent 33%),
-          linear-gradient(135deg, #00396d 0%, #005b8e 44%, #00855d 100%);
-        overflow: hidden;
-      }
-
-      .welcome-screen::before,
-      .welcome-screen::after {
-        content: "";
-        position: absolute;
-        border: 1px solid rgba(255, 232, 163, 0.2);
-        border-radius: 50%;
-        pointer-events: none;
-      }
-
-      .welcome-screen::before {
-        width: min(84vw, 850px);
-        aspect-ratio: 1;
-        top: -48%;
-        right: -22%;
-        box-shadow: 0 0 0 22px rgba(255, 232, 163, 0.025), 0 0 0 68px rgba(255, 232, 163, 0.018);
-      }
-
-      .welcome-screen::after {
-        width: min(58vw, 590px);
-        aspect-ratio: 1;
-        bottom: -34%;
-        left: -16%;
-        border-color: rgba(93, 205, 213, 0.22);
-        box-shadow: 0 0 0 26px rgba(93, 205, 213, 0.025);
-      }
-
-      .welcome-card {
-        width: min(100%, 560px);
-        max-height: calc(100dvh - 48px);
-        overflow: auto;
-        background: linear-gradient(135deg, rgba(0, 59, 107, 0.96) 0%, rgba(0, 112, 104, 0.95) 58%, rgba(0, 136, 87, 0.96) 100%);
-        border: 1px solid rgba(255, 232, 163, 0.58);
-        border-radius: 30px;
-        box-shadow: var(--shadow);
-        padding: clamp(24px, 5vw, 40px) clamp(18px, 4vw, 28px) clamp(20px, 4vw, 28px);
-        text-align: center;
-        position: relative;
-        isolation: isolate;
-        backdrop-filter: blur(14px);
-        animation: cardIn 700ms cubic-bezier(0.23, 1, 0.32, 1) both;
-      }
-
-      .welcome-card::before {
-        content: "";
-        position: absolute;
-        inset: 8px;
-        border: 1px solid rgba(255, 232, 163, 0.16);
-        border-radius: 23px;
-        pointer-events: none;
-        z-index: -1;
-      }
-
-      .welcome-card::after {
-        content: "";
-        position: absolute;
-        inset-inline: 20%;
-        top: 0;
-        height: 3px;
-        border-radius: 0 0 999px 999px;
-        background: linear-gradient(90deg, transparent, var(--gold-light), var(--gold), var(--gold-light), transparent);
-        box-shadow: 0 2px 12px rgba(255, 232, 163, 0.55);
-      }
-
-      .logo {
-        width: clamp(86px, 20vw, 104px);
-        height: clamp(86px, 20vw, 104px);
-        margin: 4px auto 20px;
-        padding: 5px;
-        border: 2px solid var(--gold-light);
-        outline: 1px solid rgba(216, 182, 90, 0.95);
-        outline-offset: 4px;
-        border-radius: clamp(25px, 6vw, 32px);
-        background: linear-gradient(135deg, #fff3bf, #b88722 48%, #fff0b0);
-        overflow: hidden;
-        box-shadow: 0 0 0 8px rgba(216, 182, 90, 0.1), 0 18px 38px rgba(0, 19, 12, 0.5), inset 0 0 14px rgba(92, 58, 0, 0.24);
-      }
-
-      .logo img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        display: block;
-        border-radius: calc(clamp(25px, 6vw, 32px) - 8px);
-        border: 1px solid rgba(255, 255, 255, 0.6);
-      }
-
-      h1 {
-        margin: 0;
-        font-size: clamp(2rem, 5vw, 3.2rem);
-        line-height: 1.15;
-        font-weight: 800;
-        color: #fffdf3;
-        letter-spacing: -0.03em;
-        text-shadow: 0 2px 16px rgba(0, 0, 0, 0.3);
-      }
-
-      .subtitle {
-        margin: 14px 0 0;
-        font-size: clamp(1.05rem, 2.5vw, 1.35rem);
-        font-weight: 700;
-        color: var(--primary);
-      }
-
-      .notice {
-        margin: 18px auto 0;
-        max-width: 46ch;
-        color: rgba(255, 253, 243, 0.9);
-        font-size: clamp(1.02rem, 2.4vw, 1.18rem);
-        line-height: 2;
-        font-weight: 700;
-      }
-
-      .full-subscription {
-        display: block;
-        color: var(--gold-light);
-        font-weight: 800;
-      }
-
-      .date {
-        direction: rtl;
-        unicode-bidi: plaintext;
-        font-weight: 800;
-        color: #123526;
-        white-space: nowrap;
-        display: inline-block;
-      }
-
-      .redirect {
-        margin-top: 22px;
-        font-size: 1.05rem;
-        font-weight: 700;
-        color: rgba(255, 253, 243, 0.92);
-      }
-
-      .progress {
-        margin-top: 18px;
-        height: 10px;
-        border: 1px solid rgba(255, 232, 163, 0.3);
-        background: rgba(1, 33, 48, 0.58);
-        border-radius: 999px;
-        overflow: hidden;
-        box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.22);
-      }
-
-      .progress span {
-        display: block;
-        height: 100%;
-        width: 0%;
-        background: linear-gradient(90deg, #b98520, var(--gold-light), #e0bc61);
-        box-shadow: 0 0 14px rgba(255, 232, 163, 0.72);
-        animation: fillBar 10s linear forwards;
-      }
-
-      .seconds {
-        margin-top: 10px;
-        color: rgba(255, 253, 243, 0.7);
-        font-size: 0.95rem;
-      }
-
-      .install-tip {
-        position: fixed;
-        inset-inline: 16px;
-        bottom: 92px;
-        z-index: 35;
-        background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(248,252,250,0.98));
-        border: 1px solid rgba(15, 107, 74, 0.12);
-        border-radius: 24px;
-        box-shadow: 0 22px 54px rgba(17, 24, 39, 0.16);
-        padding: 18px;
-        display: none;
-        backdrop-filter: blur(14px);
-      }
-
-      .install-tip.show {
-        display: block;
-        animation: tipIn 260ms ease-out both;
-      }
-
-      .install-tip h2 {
-        margin: 0 0 10px;
-        font-size: 1.12rem;
-        color: #123526;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-      }
-
-      .install-tip p {
-        margin: 0;
-        color: var(--muted);
-        line-height: 1.8;
-        font-size: 0.96rem;
-      }
-
-      .install-badge {
-        display: inline-grid;
-        place-items: center;
-        width: 34px;
-        height: 34px;
-        border-radius: 12px;
-        background: var(--primary-soft);
-        color: var(--primary);
-        font-size: 1.1rem;
-        flex: 0 0 auto;
-      }
-
-      .install-steps {
-        margin: 12px 0 0;
-        display: grid;
-        gap: 10px;
-      }
-
-      .install-step {
-        display: flex;
-        align-items: flex-start;
-        gap: 10px;
-        background: rgba(255,255,255,0.72);
-        border: 1px solid rgba(229,231,235,0.9);
-        border-radius: 16px;
-        padding: 12px;
-      }
-
-      .install-step-icon {
-        width: 34px;
-        height: 34px;
-        border-radius: 12px;
-        display: grid;
-        place-items: center;
-        background: #f3f7f5;
-        color: var(--primary);
-        font-size: 1.05rem;
-        flex: 0 0 auto;
-      }
-
-      .install-step-text {
-        color: #374151;
-        line-height: 1.8;
-        font-size: 0.96rem;
-        font-weight: 600;
-      }
-
-      .install-actions {
-        margin-top: 12px;
-        display: flex;
-        gap: 10px;
-        flex-wrap: wrap;
-      }
-
-      button {
-        border: 0;
-        border-radius: 14px;
-        padding: 12px 18px;
-        background: var(--primary);
-        color: #fff;
-        font: inherit;
-        font-weight: 700;
-        cursor: pointer;
-        transition: transform 160ms ease;
-      }
-
-      button:active {
-        transform: scale(0.97);
-      }
-
-      button.secondary {
-        background: var(--primary-soft);
-        color: var(--primary);
-      }
-
-      .hidden {
-        display: none !important;
-      }
-
-      @keyframes cardIn {
-        from {
-          opacity: 0;
-          transform: translateY(18px) scale(0.98);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0) scale(1);
-        }
-      }
-
-      @keyframes fillBar {
-        to {
-          width: 100%;
-        }
-      }
-
-      @keyframes tipIn {
-        from {
-          opacity: 0;
-          transform: translateY(14px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-
-      @media (max-width: 640px) {
-        .welcome-screen {
-          padding: 16px;
-        }
-
-        .welcome-card {
-          border-radius: 24px;
-        }
-            
-
-        .notice {
-          line-height: 1.9;
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <div class="welcome-screen" id="welcomeScreen">
-      <section class="welcome-card" aria-live="polite">
-        <div class="logo"><img src="200.png" alt="أيقونة نظام ملف الإنجاز" /></div>
-        <h1>نظام ملف الإنجاز</h1>
-        <p class="notice">
-          التطبيق مجاني لمشتركات نظام التقارير الذكي
-          <span class="full-subscription">الاشتراك الكامل</span>
-        </p>
-        <p class="redirect">سيتم تحويلك إلى النظام خلال ثوانٍ</p>
-        <div class="progress" aria-hidden="true"><span></span></div>
-        <div class="seconds"><span id="countdown">10</span> ثوانٍ متبقية</div>
-      </section>
-    </div>
-
-    <aside class="install-tip" id="installTip" role="dialog" aria-modal="false" aria-labelledby="installTitle">
-      <h2 id="installTitle"><span class="install-badge">⬇</span> طريقة تثبيت التطبيق</h2>
-      <p id="installText"></p>
-      <div class="install-steps" id="installSteps"></div>
-      <div class="install-actions">
-        <button id="nativeInstallButton" type="button" class="hidden">تثبيت التطبيق</button>
-        <button id="closeTipButton" type="button" class="secondary">إغلاق</button>
+    <section class="notice" aria-labelledby="announcement-title">
+      <div class="topbar" aria-label="نظام التقارير">
+        <span class="brand-mark" aria-hidden="true">Ai</span>
+        <span class="topbar__name">نظام التقارير</span>
       </div>
-    </aside>
 
+      <article class="announcement-card">
+        <p class="eyebrow"><span class="eyebrow__dot" aria-hidden="true"></span>تنويه هام</p>
+        <h1 id="announcement-title">ملف الإنجاز الإلكتروني <span>الآن داخل نظام التقارير</span></h1>
+        <p class="lead">مكان واحد، وصول أسرع، وتجربة موحّدة لإنجاز أعمالك.</p>
 
-    <script>
-      const SYSTEM_URL = "https://teacherhub-e9sten9g.manus.space/female";
-      const welcomeScreen = document.getElementById("welcomeScreen");
-      const countdown = document.getElementById("countdown");
-      const installTip = document.getElementById("installTip");
-      const installText = document.getElementById("installText");
-      const installSteps = document.getElementById("installSteps");
-      const closeTipButton = document.getElementById("closeTipButton");
-      const nativeInstallButton = document.getElementById("nativeInstallButton");
+        <div class="cancellation" id="cancellation-message">
+          <span class="cancellation__icon" aria-hidden="true">
+            <svg width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+              <path d="M14 2v6h6M8 13h8M8 17h4" />
+              <path d="m16.5 13.5 4 4m0-4-4 4" />
+            </svg>
+          </span>
+          <span class="cancellation__text">تم إلغاء التطبيق المستقل لملف الإنجاز الإلكتروني</span>
+        </div>
 
-      let deferredPrompt = null;
-      let redirectTimer = null;
+        <div class="cta-wrap">
+          <button class="cta" type="button" id="action-button" aria-describedby="action-hint">
+            <span>ادخلي إلى ملف الإنجاز مباشرة من أيقونته في نظام التقارير الأساسي</span>
+            <span class="cta__arrow" aria-hidden="true">
+              <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 12h14" />
+                <path d="m13 6 6 6-6 6" />
+              </svg>
+            </span>
+          </button>
+          <p class="hint" id="action-hint">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+            ستجدين جميع خدماتك في المكان نفسه داخل النظام.
+          </p>
+        </div>
 
-      function isAppInstalled() {
-        return window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
-      }
+        <div class="journey" aria-label="خطوات الوصول إلى ملف الإنجاز">
+          <span class="journey__step">نظام التقارير</span>
+          <span class="journey__arrow" aria-hidden="true">←</span>
+          <span class="journey__step">أيقونة ملف الإنجاز</span>
+          <span class="journey__arrow" aria-hidden="true">←</span>
+          <span class="journey__step">بدء العمل</span>
+        </div>
 
-      function openSystemPage() {
-        window.location.replace(SYSTEM_URL);
-      }
+        <p class="footer-note">شكراً لاستخدامكم نظام التقارير</p>
+      </article>
+    </section>
+  </main>
 
-      function hideInstallTipIfInstalled() {
-        if (isAppInstalled()) {
-          installTip.classList.remove("show");
-          openSystemPage();
-        }
-      }
+  <script>
+    const page = document.getElementById('page');
+    const actionButton = document.getElementById('action-button');
 
-      function getPlatform() {
-        const ua = navigator.userAgent || "";
-        const isAndroid = /Android/i.test(ua);
-        const isIOS = /iPhone|iPad|iPod/i.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
-        if (isAndroid) return "android";
-        if (isIOS) return "ios";
-        return "other";
-      }
+    window.addEventListener('DOMContentLoaded', () => {
+      requestAnimationFrame(() => page.classList.add('loaded'));
+    });
 
-      function showInstallInstructions() {
-        const platform = getPlatform();
-        if (platform === "android") {
-          installText.textContent = "لتثبيت التطبيق على جهاز أندرويد، اتبع الخطوات التالية:";
-          installSteps.innerHTML = `
-            <div class="install-step">
-              <div class="install-step-icon">⋮</div>
-              <div class="install-step-text">افتح الصفحة في متصفح Chrome ثم اضغط على قائمة النقاط الثلاث في الأعلى.</div>
-            </div>
-            <div class="install-step">
-              <div class="install-step-icon">＋</div>
-              <div class="install-step-text">اختر «إضافة إلى الشاشة الرئيسية» أو «تثبيت التطبيق».</div>
-            </div>
-            <div class="install-step">
-              <div class="install-step-icon">✓</div>
-              <div class="install-step-text">إذا ظهر زر «تثبيت التطبيق» هنا، يمكنك الضغط عليه مباشرة لإكمال التثبيت بسهولة.</div>
-            </div>
-          `;
-          nativeInstallButton.classList.toggle("hidden", !deferredPrompt);
-        } else if (platform === "ios") {
-          installText.textContent = "لتثبيت التطبيق على iPhone أو iPad، اتبع الخطوات التالية:";
-          installSteps.innerHTML = `
-            <div class="install-step">
-              <div class="install-step-icon">⎋</div>
-              <div class="install-step-text">افتح الصفحة في متصفح Safari ثم اضغط زر المشاركة.</div>
-            </div>
-            <div class="install-step">
-              <div class="install-step-icon">＋</div>
-              <div class="install-step-text">اختر «إضافة إلى الشاشة الرئيسية» من القائمة.</div>
-            </div>
-            <div class="install-step">
-              <div class="install-step-icon">✓</div>
-              <div class="install-step-text">بعد التثبيت ستظهر الأيقونة على الشاشة الرئيسية ويمكنك فتح التطبيق منها مباشرة.</div>
-            </div>
-          `;
-          nativeInstallButton.classList.add("hidden");
-        } else {
-          installText.textContent = "يمكنك تثبيت التطبيق من قائمة المتصفح إذا كان خيار التثبيت متاحاً على جهازك.";
-          installSteps.innerHTML = "";
-          nativeInstallButton.classList.add("hidden");
-        }
-        installTip.classList.add("show");
-      }
+    window.addEventListener('pointermove', (event) => {
+      const x = (event.clientX / window.innerWidth) * 100;
+      const y = (event.clientY / window.innerHeight) * 100;
+      page.style.setProperty('--pointer-x', `${x}%`);
+      page.style.setProperty('--pointer-y', `${y}%`);
+    }, { passive: true });
 
-      closeTipButton.addEventListener("click", () => {
-        installTip.classList.remove("show");
-        if (redirectTimer) clearTimeout(redirectTimer);
-      });
-
-      nativeInstallButton.addEventListener("click", async () => {
-        if (!deferredPrompt) return;
-        deferredPrompt.prompt();
-        const choice = await deferredPrompt.userChoice;
-        deferredPrompt = null;
-        nativeInstallButton.classList.add("hidden");
-        if (choice.outcome === "accepted") {
-          installTip.classList.remove("show");
-          openSystemPage();
-        }
-      });
-
-      window.addEventListener("beforeinstallprompt", (event) => {
-        event.preventDefault();
-        deferredPrompt = event;
-        if (getPlatform() === "android" && installTip.classList.contains("show")) {
-          nativeInstallButton.classList.remove("hidden");
-        }
-      });
-
-      window.addEventListener("appinstalled", () => {
-        installTip.classList.remove("show");
-        openSystemPage();
-      });
-
-      let remaining = 10;
-      const timer = setInterval(() => {
-        remaining -= 1;
-        countdown.textContent = String(Math.max(remaining, 0));
-        if (remaining <= 0) {
-          clearInterval(timer);
-          welcomeScreen.classList.add("hidden");
-          if (isAppInstalled()) {
-            openSystemPage();
-            return;
-          }
-          showInstallInstructions();
-        }
-      }, 1000);
-
-      document.addEventListener("visibilitychange", () => {
-        if (!document.hidden) {
-          hideInstallTipIfInstalled();
-        }
-      });
-
-      if ("serviceWorker" in navigator) {
-        window.addEventListener("load", () => {
-          navigator.serviceWorker.register("sw.js").catch(() => {});
-        });
-      }
-    </script>
-  </body>
+    actionButton.addEventListener('click', () => {
+      page.classList.remove('focus-mode');
+      void page.offsetWidth;
+      page.classList.add('focus-mode');
+      document.getElementById('cancellation-message').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+  </script>
+</body>
 </html>
